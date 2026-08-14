@@ -2,10 +2,6 @@
 
 ## Exercise 0.4
 
-# Part 0
-
-## Exercise 0.4
-
 ```mermaid
 sequenceDiagram
     participant browser
