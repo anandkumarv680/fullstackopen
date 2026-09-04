@@ -29,6 +29,11 @@
       "name": "samay raina",
       "number": "4388378438",
       "id": "8ILIF3O9SJ8"
+    },
+    {
+      "name": "ayush",
+      "number": "9489348748",
+      "id": "HNQcOapR88Y"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
