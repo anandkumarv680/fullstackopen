@@ -3,12 +3,14 @@ import Filter from "./components/Filter";
 import Persons from "./components/Person";
 import PersonForm from "./components/PersonForm";
 import personService from "./services/Person";
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [number, setNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((persons) => {
@@ -40,17 +42,34 @@ const App = () => {
       );
 
       if (change) {
-        const personObj = {
-          name: newName,
-          number: number,
-        };
-
         personService
-          .update({ id: person.id, personObj })
+          .update({
+            id: person.id,
+            personObj: personObj,
+          })
           .then((updatedPerson) => {
             setPersons(
               persons.map((p) => (p.id === person.id ? updatedPerson : p)),
             );
+
+            setMessage({
+              type: "success",
+              text: `Updated ${updatedPerson.name}`,
+            });
+
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            setMessage({
+              type: "error",
+              text: `Information of ${personObj.name} has already been removed from server`,
+            });
+
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
           });
       }
 
@@ -63,11 +82,21 @@ const App = () => {
       setPersons([...persons, returnedPerson]);
       setNewName("");
       setNumber("");
+
+      setMessage({
+        type: "success",
+        text: `Added ${returnedPerson.name}`,
+      });
+
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     });
   };
 
   const deletePerson = (p) => {
     const result = window.confirm(`delete ${p.name} ?`);
+
     if (result) {
       personService.del(p.id).then(() => {
         setPersons(persons.filter((person) => person.id !== p.id));
@@ -78,6 +107,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {message && (
+        <div className={message.type === "error" ? "error" : "success"}>
+          {message.text}
+        </div>
+      )}
 
       <Filter setFilter={setFilter} />
 
