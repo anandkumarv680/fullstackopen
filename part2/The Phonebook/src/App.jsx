@@ -1,56 +1,101 @@
-import { useState, useEffect } from 'react'
-import axios from "axios";
-import Filter from './components/Filter'
-import Persons from './components/Person'
-import PersonForm from './components/PersonForm'
+import { useState, useEffect } from "react";
+import Filter from "./components/Filter";
+import Persons from "./components/Person";
+import PersonForm from "./components/PersonForm";
+import personService from "./services/Person";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [number, setNumber] = useState("");
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        setPersons(response.data);
-      });
+    personService.getAll().then((persons) => {
+      setPersons(persons);
+    });
   }, []);
-  const [newName, setNewName] = useState('')
-  const [number, setNumber] = useState('')
-  const [filter, setFilter] = useState('')
+
   const userName = (event) => {
-    event.preventDefault();
-    setNewName(event.target.value)
-  }
+    setNewName(event.target.value);
+  };
 
   const addNumber = (event) => {
-    event.preventDefault();
-    setNumber(event.target.value)
-  }
-
+    setNumber(event.target.value);
+  };
 
   const addUser = (event) => {
     event.preventDefault();
-    if (persons.some(p => p.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNumber('')
-      return
+
+    const personObj = {
+      name: newName,
+      number: number,
+    };
+
+    if (persons.some((p) => p.name === newName)) {
+      const person = persons.find((p) => p.name === newName);
+
+      const change = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`,
+      );
+
+      if (change) {
+        const personObj = {
+          name: newName,
+          number: number,
+        };
+
+        personService
+          .update({ id: person.id, personObj })
+          .then((updatedPerson) => {
+            setPersons(
+              persons.map((p) => (p.id === person.id ? updatedPerson : p)),
+            );
+          });
+      }
+
+      setNewName("");
+      setNumber("");
+      return;
     }
-    setPersons([...persons, { name: newName, number: number }])
-    setNewName('')
-    setNumber('')
-  }
+
+    personService.create(personObj).then((returnedPerson) => {
+      setPersons([...persons, returnedPerson]);
+      setNewName("");
+      setNumber("");
+    });
+  };
+
+  const deletePerson = (p) => {
+    const result = window.confirm(`delete ${p.name} ?`);
+    if (result) {
+      personService.del(p.id).then(() => {
+        setPersons(persons.filter((person) => person.id !== p.id));
+      });
+    }
+  };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter setFilter={setFilter}></Filter>
-      <h2>add a new</h2>
-      <PersonForm userName={userName} addNumber={addNumber} addUser={addUser} number={number} newName={newName} ></PersonForm>
-      <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter}></Persons>
-    </div>
-  )
-}
 
-export default App
+      <Filter setFilter={setFilter} />
+
+      <h2>add a new</h2>
+
+      <PersonForm
+        userName={userName}
+        addNumber={addNumber}
+        addUser={addUser}
+        number={number}
+        newName={newName}
+      />
+
+      <h2>Numbers</h2>
+
+      <Persons persons={persons} filter={filter} deletePerson={deletePerson} />
+    </div>
+  );
+};
+
+export default App;
