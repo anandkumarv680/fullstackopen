@@ -34,52 +34,9 @@ const App = () => {
       number: number,
     };
 
-    if (persons.some((p) => p.name === newName)) {
-      const person = persons.find((p) => p.name === newName);
-
-      const change = window.confirm(
-        `${newName} is already added to phonebook, replace the old number with a new one?`,
-      );
-
-      if (change) {
-        personService
-          .update({
-            id: person.id,
-            personObj: personObj,
-          })
-          .then((updatedPerson) => {
-            setPersons(
-              persons.map((p) => (p.id === person.id ? updatedPerson : p)),
-            );
-
-            setMessage({
-              type: "success",
-              text: `Updated ${updatedPerson.name}`,
-            });
-
-            setTimeout(() => {
-              setMessage(null);
-            }, 5000);
-          })
-          .catch((error) => {
-            setMessage({
-              type: "error",
-              text: `Information of ${personObj.name} has already been removed from server`,
-            });
-
-            setTimeout(() => {
-              setMessage(null);
-            }, 5000);
-          });
-      }
-
-      setNewName("");
-      setNumber("");
-      return;
-    }
-
     personService.create(personObj).then((returnedPerson) => {
-      setPersons([...persons, returnedPerson]);
+      setPersons(persons.concat(returnedPerson));
+
       setNewName("");
       setNumber("");
 
@@ -128,7 +85,11 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons persons={persons} filter={filter} deletePerson={deletePerson} />
+      <Persons
+        persons={persons}
+        filter={filter}
+        deletePerson={deletePerson}
+      />
     </div>
   );
 };
