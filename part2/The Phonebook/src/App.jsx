@@ -33,6 +33,7 @@ const App = () => {
       name: newName,
       number: number,
     };
+    console.log("SENDING:", personObj);
 
     personService.create(personObj).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
@@ -48,7 +49,16 @@ const App = () => {
       setTimeout(() => {
         setMessage(null);
       }, 5000);
-    });
+    }).catch((error) =>{
+      setMessage({
+        type : "error",
+        text : error.response.data.error
+      });
+
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    })
   };
 
   const deletePerson = (p) => {
