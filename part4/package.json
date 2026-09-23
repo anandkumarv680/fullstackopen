@@ -7,13 +7,15 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node index.js",
-    "dev": "NODE_ENV=development node --watch index.js",
+    "start": "node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
     "test": "cross-env NODE_ENV=test node --test"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^18.0.1",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.1"
   },
   "devDependencies": {

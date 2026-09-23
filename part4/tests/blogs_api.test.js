@@ -1,6 +1,7 @@
 const { test } = require('node:test')
 const assert = require('node:assert')
 const supertest = require('supertest')
+const User = require('../models/user')
 
 const app = require('../app')
 
@@ -129,4 +130,79 @@ test('a blog can be updated', async () => {
     .expect('Content-Type', /application\/json/)
 
   assert.strictEqual(response.body.likes, blogToUpdate.likes + 1)
+})
+
+test('user without password is not created', async () => {
+  const usersAtStart = await User.find({})
+
+  const newUser = {
+    username: 'testuser',
+    name: 'Test User'
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+
+  const usersAtEnd = await User.find({})
+
+  assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+})
+
+test('user with too short username is not created', async () => {
+  const usersAtStart = await User.find({})
+
+  const newUser = {
+    username: 'ab',
+    name: 'Test User',
+    password: 'secret123'
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+
+  const usersAtEnd = await User.find({})
+
+  assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+})
+
+test('duplicate username is not created', async () => {
+  const newUser = {
+    username: 'uniqueuser',
+    name: 'Test User',
+    password: 'secret123'
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(201)
+
+  const usersAtStart = await User.find({})
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+
+  const usersAtEnd = await User.find({})
+
+  assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+})
+
+test('blog cannot be added without a token', async () => {
+  const newBlog = {
+    title: 'Unauthorized Blog',
+    author: 'Test',
+    url: 'https://example.com',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
 })
