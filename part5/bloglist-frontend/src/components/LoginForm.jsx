@@ -1,7 +1,17 @@
 import { useState } from "react";
+import {
+  TextField,
+  Button,
+  Paper,
+  Stack,
+} from "@mui/material";
+
 import loginService from "../services/login";
 
-const LoginForm = ({ setUser, showNotification }) => {
+const LoginForm = ({
+  setUser,
+  showNotification,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,7 +24,10 @@ const LoginForm = ({ setUser, showNotification }) => {
         password,
       });
 
-      localStorage.setItem("loggedBloglistUser", JSON.stringify(user));
+      localStorage.setItem(
+        "loggedBloglistUser",
+        JSON.stringify(user)
+      );
 
       setUser(user);
 
@@ -23,35 +36,51 @@ const LoginForm = ({ setUser, showNotification }) => {
 
       showNotification("login successful");
     } catch {
-      showNotification("wrong username or password");
+      showNotification(
+        "wrong username or password"
+      );
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <div>
-        <label>
-          username:
-          <input
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </label>
-      </div>
+    <Paper
+      elevation={3}
+      sx={{
+        padding: 3,
+        marginTop: 3,
+        maxWidth: 400,
+      }}
+    >
+      <h2>Log in to application</h2>
 
-      <div>
-        <label>
-          password:
-          <input
+      <form onSubmit={handleLogin}>
+        <Stack spacing={2}>
+          <TextField
+            label="username:"
+            value={username}
+            onChange={({ target }) =>
+              setUsername(target.value)
+            }
+          />
+
+          <TextField
+            label="password:"
             type="password"
             value={password}
-            onChange={({ target }) => setPassword(target.value)}
+            onChange={({ target }) =>
+              setPassword(target.value)
+            }
           />
-        </label>
-      </div>
 
-      <button type="submit">login</button>
-    </form>
+          <Button
+            type="submit"
+            variant="contained"
+          >
+            login
+          </Button>
+        </Stack>
+      </form>
+    </Paper>
   );
 };
 

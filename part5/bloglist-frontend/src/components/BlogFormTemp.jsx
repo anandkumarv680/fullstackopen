@@ -1,6 +1,12 @@
 import { useState } from "react";
+import {
+  TextField,
+  Button,
+  Paper,
+  Stack,
+} from "@mui/material";
 
-const BlogForm = ({ createBlog, setShowForm }) => {
+const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -17,44 +23,54 @@ const BlogForm = ({ createBlog, setShowForm }) => {
     setTitle("");
     setAuthor("");
     setUrl("");
-
-    setShowForm(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>
-          title:
-          <input
+    <Paper
+      elevation={3}
+      sx={{
+        padding: 3,
+        marginTop: 3,
+        maxWidth: 500,
+      }}
+    >
+      <h2>create new blog</h2>
+
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={2}>
+          <TextField
+            label="title:"
             value={title}
-            onChange={({ target }) => setTitle(target.value)}
+            onChange={({ target }) =>
+              setTitle(target.value)
+            }
           />
-        </label>
-      </div>
 
-      <div>
-        <label>
-          author:
-          <input
+          <TextField
+            label="author:"
             value={author}
-            onChange={({ target }) => setAuthor(target.value)}
+            onChange={({ target }) =>
+              setAuthor(target.value)
+            }
           />
-        </label>
-      </div>
 
-      <div>
-        <label>
-          url:
-          <input
+          <TextField
+            label="url:"
             value={url}
-            onChange={({ target }) => setUrl(target.value)}
+            onChange={({ target }) =>
+              setUrl(target.value)
+            }
           />
-        </label>
-      </div>
 
-      <button type="submit">create</button>
-    </form>
+          <Button
+            type="submit"
+            variant="contained"
+          >
+            create
+          </Button>
+        </Stack>
+      </form>
+    </Paper>
   );
 };
 

@@ -1,13 +1,17 @@
+import { Alert, Box } from "@mui/material";
+
 const Notification = ({ message }) => {
-  if (message === null) {
-    return null
+  if (!message) {
+    return null;
   }
 
   return (
-    <div>
-      {message}
-    </div>
-  )
-}
+    <Box sx={{ marginTop: 2 }}>
+      <Alert severity="success">
+        {message}
+      </Alert>
+    </Box>
+  );
+};
 
-export default Notification
+export default Notification;

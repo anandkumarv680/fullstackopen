@@ -65,6 +65,8 @@ blogRouter.put("/:id", async (request, response) => {
   }).populate("user");
 
   response.json(updatedBlog);
+
+  response.json(updatedBlog);
 });
 
 module.exports = blogRouter;

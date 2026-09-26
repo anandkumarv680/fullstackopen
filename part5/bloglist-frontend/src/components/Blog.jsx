@@ -1,46 +1,32 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Paper, Button } from "@mui/material";
 
-const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
-  const [showDetails, setShowDetails] = useState(false);
-
-  const blogStyle = {
-    padding: 10,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
+const Blog = ({ blog }) => {
   return (
-    <div className="blog" style={blogStyle}>
+    <Paper
+      className="blog"
+      elevation={3}
+      sx={{
+        padding: 2,
+        marginBottom: 2,
+      }}
+    >
       <div>
-        {blog.title} {blog.author}
+        <strong>
+          {blog.title}
+        </strong>{" "}
+        {blog.author}
 
-        <button onClick={() => setShowDetails(!showDetails)}>
-          {showDetails ? "hide" : "view"}
-        </button>
+        <Button
+          component={Link}
+          to={`/blogs/${blog.id}`}
+          size="small"
+          sx={{ marginLeft: 2 }}
+        >
+          view
+        </Button>
       </div>
-
-      {showDetails && (
-        <div>
-          <p>{blog.url}</p>
-
-          <p>
-            likes {blog.likes}
-            <button onClick={() => likeBlog(blog)}>
-              like
-            </button>
-          </p>
-
-          <p>{blog.user?.name}</p>
-        </div>
-      )}
-
-      {blog.user?.username === user?.username && (
-        <button onClick={() => deleteBlog(blog)}>
-          remove
-        </button>
-      )}
-    </div>
+    </Paper>
   );
 };
 

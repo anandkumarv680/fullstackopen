@@ -14,19 +14,9 @@ const create = async (newObject, token) => {
     },
   };
 
-  const response = await axios.post(baseUrl, newObject, config);
-  return response.data;
-};
-
-const remove = async (id, token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  const response = await axios.delete(
-    `${baseUrl}/${id}`,
+  const response = await axios.post(
+    baseUrl,
+    newObject,
     config
   );
 
@@ -49,9 +39,22 @@ const update = async (id, blogObject, token) => {
   return response.data;
 };
 
+const remove = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  await axios.delete(
+    `${baseUrl}/${id}`,
+    config
+  );
+};
+
 export default {
   getAll,
   create,
   update,
-  remove
+  remove,
 };
