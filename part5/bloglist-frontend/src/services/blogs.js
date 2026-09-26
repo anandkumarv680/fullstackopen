@@ -18,7 +18,40 @@ const create = async (newObject, token) => {
   return response.data;
 };
 
+const remove = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(
+    `${baseUrl}/${id}`,
+    config
+  );
+
+  return response.data;
+};
+
+const update = async (id, blogObject, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(
+    `${baseUrl}/${id}`,
+    blogObject,
+    config
+  );
+
+  return response.data;
+};
+
 export default {
   getAll,
   create,
+  update,
+  remove
 };
