@@ -14,10 +14,7 @@ const LoginForm = ({ setUser, showNotification }) => {
         password,
       });
 
-      localStorage.setItem(
-        "loggedBloglistUser",
-        JSON.stringify(user)
-      );
+      localStorage.setItem("loggedBloglistUser", JSON.stringify(user));
 
       setUser(user);
 
@@ -25,7 +22,7 @@ const LoginForm = ({ setUser, showNotification }) => {
       setPassword("");
 
       showNotification("login successful");
-    } catch{
+    } catch {
       showNotification("wrong username or password");
     }
   };
@@ -33,20 +30,24 @@ const LoginForm = ({ setUser, showNotification }) => {
   return (
     <form onSubmit={handleLogin}>
       <div>
-        username:
-        <input
-          value={username}
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <label>
+          username:
+          <input
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </label>
       </div>
 
       <div>
-        password:
-        <input
-          type="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
-        />
+        <label>
+          password:
+          <input
+            type="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </label>
       </div>
 
       <button type="submit">login</button>
